@@ -1,0 +1,15 @@
+<apex:page standardController="Campaign" recordSetVar="camp" sidebar="false" >
+  <apex:pageBlock >
+  <apex:sectionHeader title="Campaign View" />
+  <apex:pageBlockTable id="tbl"  value="{!camp}" var="c">
+  <apex:column value="{!c.name}" />
+  <apex:column value="{!c.type}" />
+  <apex:column value="{!c.startdate}" />
+  <apex:column value="{!c.enddate}" />
+  <apex:column headerValue="Action">
+  <a href="/apex/Registration?id={!c.id}">Registration</a>&nbsp;
+  <apex:outputLink value="{!URLFOR($Page.custask)}">Home</apex:outputLink>
+  </apex:column>
+  </apex:pageBlockTable>
+</apex:pageBlock>
+</apex:page>
