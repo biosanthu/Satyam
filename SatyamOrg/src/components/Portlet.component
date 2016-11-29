@@ -1,0 +1,28 @@
+<!-- 
+/*
+ * SF Portlets Header - Do not remove!
+ *
+ * $Author: Aslam Bari  $
+ * $Change:  $
+ * $DateTime: 12 Oct, 2010 $
+ * $File: Portlet.component $
+ * $Id:  $
+ * $Revision:  1.0 $
+ */
+ -->
+<apex:component access="global">
+<apex:attribute name="portlet" type="Portlet" assignTo="{!portlet}" description="Portlet Data Record"/>
+<div class="portlet">
+    <div class="portlet-header">{!portlet.PortletRecord.Name}</div>
+    <div class="portlet-content">
+       <apex:outputPanel rendered="{!Portlet.portletRecord.Type__c = 'Query'}">
+            <apex:outputText escape="false" value="{!Portlet.tableData}"/>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!Portlet.portletRecord.Type__c != 'Query'}">
+            <apex:iframe src="{!Portlet.portletRecord.Data__c}" frameborder="false" scrolling="false" rendered="{!Portlet.portletRecord.Type__c == 'Url'}" height="250"/>
+            <apex:outputText escape="false" value="{!Portlet.portletRecord.Data__c}" rendered="{!NOT(Portlet.portletRecord.Type__c == 'Url')}"/>
+        </apex:outputPanel>
+        
+    </div>
+</div>
+</apex:component>

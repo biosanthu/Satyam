@@ -1,0 +1,19 @@
+<apex:page Controller="CustomReportControl"  sidebar="false" >
+<center><apex:sectionHeader title="Custom Report"/></center>
+<apex:pageBlock >
+<apex:PageBlockTable value="{!opportunities}" rows="40"  border="1" var="opp" id="theTable">
+    <apex:column value="{!opp.name}"/>
+    <apex:column value="{!opp.Probability}"/>
+    <apex:column value="{!opp.Contract_Value__c}"/>
+    <apex:column value="{!opp.TCV_Probs__c}"/>
+</apex:PageBlockTable>
+<table width ="100%" border="1" cellpadding="0" cellspacing="0">
+<tr>
+    <td width="43%" style="padding-left:180px;"><b>Total</b></td>
+    <td width="15%" ></td>
+    <td width="21%" ><b>{!Total}</b></td>
+    <td width="16%"><b>{!TCVtotal}</b></td>
+</tr>
+</table>
+</apex:PageBlock>
+</apex:page>

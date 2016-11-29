@@ -1,0 +1,11 @@
+<apex:page Controller="CustomReportControl"  sidebar="false" >
+<apex:pageBlock title="Custom Report">
+<apex:PageBlockTable value="{!opportunities}" var="opp" id="theTable" >
+<apex:column value="{!opp.name}"/>
+<apex:column value="{!opp.Probability}"/>
+<apex:column value="{!opp.TCV_Probs__c}"/>
+<apex:column value="{!opp.Contract_Value__c}"/>
+</apex:PageBlockTable><br></br>
+<b>Total :</b>
+</apex:PageBlock>
+</apex:page>

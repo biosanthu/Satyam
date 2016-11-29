@@ -1,0 +1,45 @@
+<apex:page standardController="Campaign"  sidebar="false">
+<script>
+function confirmCancel() 
+{
+var isCancel = confirm("Are you sure you wish to cancel?");
+if (isCancel) return true;
+return false;
+}
+</script>
+<style type='text/css'>
+.body1{
+     padding-left:125px;
+}
+</style>
+<apex:sectionHeader title="Event Registration"/>
+<apex:form >
+<apex:pageBlock title="Registration Form"  mode="edit" >
+<center>
+<apex:pageBlockButtons >
+<table width="100%" align="center">
+    <tr>
+        <td style="padding-left:125px;">
+            <apex:commandButton action="{!Save}"  value="Submit"/>
+            <apex:commandButton action="{!cancel}"   value="Cancel"
+                    onclick="return confirmCancel()" immediate="true"/>     
+        </td>
+    </tr>
+</table>
+</apex:pageBlockButtons>
+</center>
+<table width="100%">
+<tr>
+<td sytle="background-color:#77b900"  >
+</td>
+</tr>
+</table>
+<apex:pageBlockSection title="Event Information">
+<apex:inputField id="CampaignName"  value="{!campaign.name}"/>
+<apex:inputField id="EventLocation"  value="{!campaign.type}"/>
+<apex:inputField id="CampaignStartdate"  value="{!campaign.startdate}"/>
+<apex:inputField id="Campaignenddate"  value="{!campaign.enddate}"/>
+</apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

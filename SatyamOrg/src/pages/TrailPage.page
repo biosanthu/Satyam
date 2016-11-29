@@ -1,0 +1,10 @@
+<apex:page standardController="Lead" recordSetVar="leads" >
+<apex:pageBlock title="My Leads">
+<apex:pageBlockTable value="{!leads}" var="l">
+<apex:column value="{!l.name}"/>
+<apex:column value="{!l.Company}"/>
+<apex:column value="{!l.Title}"/>
+<apex:column value="{!l.leadsource}"/>
+</apex:pageBlockTable>
+</apex:pageBlock>
+</apex:page>

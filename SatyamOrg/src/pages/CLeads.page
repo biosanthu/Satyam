@@ -1,0 +1,51 @@
+<apex:page Controller="MyCustomControl"   sidebar="false" >
+<style type="text/css">
+.italicText {   list-style-type:none;
+               padding: 0;
+               margin: 0;
+            }
+</style>
+
+<apex:form id="changeStatusForm">
+<script>
+ function MsgClick(url){
+  url ='google.com';
+   var currentTime = new Date()
+   var month = currentTime.getMonth()+ 1
+   if(month < 4 && month > 11)
+   {
+    alert('hai')
+    }
+    else
+    {
+      return url;
+    }
+ }
+</script>
+        <apex:pageBlock id="pb1" >
+        <apex:pageMessages />
+            <apex:pageBlockTable value="{!leads}" var="c" rows="25" columns="7">
+            <apex:column value="{!c.Name}"/>
+            <apex:column value="{!c.Company}"/>
+            <apex:column value="{!c.Title}"/>
+            <apex:column headerValue="Recent Activity">
+                  <apex:dataList value="{!c.Tasks}" var="s" styleClass="italicText" >
+                 <apex:outputLink value="/{!s.id}?retURL=%2F{!c.id}">{!s.subject}</apex:outputLink> 
+               <!-- <a href="/{!s.id}?retURL=%2F{!c.id}">{!s.subject}</a> -->
+                  </apex:dataList>
+           </apex:column>
+            <apex:column value="{!c.City}"/>
+                        <apex:column headerValue="Action"  >
+                        <a href="/00T/e?who_id={!c.id}&retURL=%2F{!c.id}">Next Activity</a>         
+                        <a href="/{!c.id}/e?retURL=%2F{!c.id}" > / EditLead</a>
+            </apex:column>
+            <apex:column headerValue="Oppor}tunity">
+           <apex:outputLink onclick="MsgClick(http://google.co.in)" >
+           New Opportunity   
+</apex:outputLink>
+           </apex:column>
+        </apex:pageBlockTable>
+     
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

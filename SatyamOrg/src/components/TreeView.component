@@ -1,0 +1,55 @@
+<apex:component controller="TreeViewController">
+    <apex:attribute name="roleOrUserId" required="true" type="String" assignTo="{!roleOrUserId}" description="Enter Role or User Id to build the hierarchy. Pass null if you are passing JSON data as a parameter" />
+    <apex:attribute name="selectable" type="Boolean" assignTo="{!selectable}" description="Do you want nodes to be selectable?" />
+    <apex:attribute name="value" type="String" description="IDs of selected Nodes in CSV format" />
+    <apex:attribute name="JsonData" type="String" assignTo="{!JsonData}" description="JSON input for the tree component" />
+    <apex:inputHidden id="selectedKeys" value="{!value}" />
+    <apex:includeScript value="{!URLFOR($Resource.DynaTree, 'jquery/jquery.js' )}" />
+    <apex:includeScript value="{!URLFOR($Resource.DynaTree, 'jquery/jquery-ui.custom.js' )}" />
+    <apex:includeScript value="{!URLFOR($Resource.DynaTree, 'jquery/jquery.cookie.js' )}" />
+    <apex:includeScript value="{!URLFOR($Resource.DynaTree, 'src/jquery.dynatree.js' )}" />
+    
+    <apex:stylesheet value="{!URLFOR($Resource.DynaTree, 'src/skin/ui.dynatree.css')}" />
+
+    <!-- Add code to initialize the tree when the document is loaded: -->
+    <script type="text/javascript">
+    $(function(){
+        // Attach the dynatree widget to an existing <div id="tree"> element
+        // and pass the tree options as an argument to the dynatree() function:
+        $("#tree").dynatree({
+            onActivate: function(node) {
+                // A DynaTreeNode object is passed to the activation handler
+                // Note: we also get this event, if persistence is on, and the page is reloaded.
+                //alert("You activated " + node.data.key);
+            },
+            persist: false,
+            checkbox: {!selectable},
+            generateIds: false,
+            classNames: {
+                checkbox: "dynatree-checkbox",
+                expanded: "dynatree-expanded"
+            },
+            selectMode: 3,
+            children: {!JsonString},
+            onSelect: function(select, node) {
+                // Get a list of all selected nodes, and convert to a key array:
+                var selKeys = $.map(node.tree.getSelectedNodes(), function(node){
+                    return node.data.key;
+                });
+                jQuery(document.getElementById("{!$Component.selectedKeys}")).val(selKeys.join(", "));
+                
+                // Get a list of all selected TOP nodes
+                var selRootNodes = node.tree.getSelectedNodes(true);
+                // ... and convert to a key array:
+                var selRootKeys = $.map(selRootNodes, function(node){
+                    return node.data.key;
+                });
+            },
+        });
+    });
+    </script>
+    
+    <!-- Add a <div> element where the tree should appear: -->
+    <div id="tree"> </div>
+
+</apex:component>

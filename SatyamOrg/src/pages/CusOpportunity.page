@@ -1,0 +1,55 @@
+<apex:page Controller="MyOpportunity" action="{!Search}" tabstyle="Opportunity__tab" sidebar="false">
+ <apex:form id="OpportunityForm">
+         <apex:pageBlock id="pb1" >
+        <apex:pageMessages />
+            <apex:pageBlockTable value="{!accounts}" var="c" >
+             <apex:column headerValue="Name" >
+                  <apex:dataTable value="{!c.opportunities}" var="o" >
+                  <apex:column value="{!o.Name}"  />
+           </apex:dataTable>
+           </apex:column>         
+            <apex:column headerValue="Contact Name" >
+                   <apex:dataTable value="{!c.Contacts}" var="s" >
+                      <apex:column value="{!s.Name}"  />
+                  </apex:dataTable>
+           </apex:column>
+            <apex:column headerValue="Type"  >
+                  <apex:dataTable value="{!c.opportunities}" var="o" >
+                  <apex:column value="{!o.Type}" />
+           </apex:dataTable>
+           </apex:column>
+             <apex:column headerValue="Stage Name" >
+                  <apex:dataTable value="{!c.opportunities}" var="o" >
+                  <apex:column value="{!o.StageName}"  />
+           </apex:dataTable>
+           </apex:column>  
+             <apex:column value="{!c.Name}" headerValue="Company Name" />
+           <apex:column headerValue="Phone Number" >
+                  <apex:dataTable value="{!c.Contacts}" var="s" >
+                      <apex:column value="{!s.Phone}"  />
+                  </apex:dataTable>    
+           </apex:column>   
+          
+          <apex:column headerValue="E-Mail"  >
+                  <apex:dataTable value="{!c.Contacts}" var="s" >
+                      <apex:column value="{!s.Email}"  />
+                  </apex:dataTable>     
+           </apex:column>     
+           <apex:column headerValue="Action" >
+                         <apex:dataTable value="{!c.opportunities}"  var="o" >
+                         <apex:column >
+                         <a href="/00T/e?what_id={!o.id}&retURL=%2F{!o.id}" >Next Activity </a>         
+                         <a href="/{!o.id}/e?retURL=%2F{!o.id}" >EditOpportunity</a> 
+                         <a href="/apex/opportunityQuote?id={!o.id}" target="_blank">PDFQuote</a></apex:column>
+                         </apex:dataTable>   
+                         </apex:column>
+                 </apex:pageBlockTable>
+                  <table width="100%">
+      <tr><td align="left" ><apex:commandButton value="Prev"  action="{!Prev}" rendered="{!showprev}"  rerender="pb1"/></td>
+          <td align="Center"><b><apex:outputtext rendered="{!NOT(ISNULL(Accounts))}"  value="{!LdList_Size}  records in Account"/></b></td>
+          <td align="right"><apex:commandButton value="Next"  action="{!Next}" rendered="{!shownext}"  rerender="pb1"/></td></tr>
+      </table>
+                </apex:pageBlock>
+               
+    </apex:form>
+</apex:page>

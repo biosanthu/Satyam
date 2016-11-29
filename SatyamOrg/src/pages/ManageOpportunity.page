@@ -1,0 +1,3 @@
+<apex:page tabstyle="Case" sidebar="false" >
+    <apex:ListViews type="opportunity"  />
+</apex:page>

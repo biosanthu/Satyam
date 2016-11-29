@@ -1,0 +1,21 @@
+<apex:page StandardController="Lead" recordSetVar="leads" sidebar="false">
+<apex:form id="changeStatusForm">
+<apex:pageBlock >
+        <apex:pageMessages />
+            <apex:pageBlockTable value="{!leads}" var="c">
+            <apex:column value="{!c.Name}"/>
+            <apex:column value="{!c.Company}"/>
+            <apex:column value="{!c.Title}"/>
+            <apex:column value="{!c.City}"/>
+            <apex:column value="{!c.State}"/>
+            <apex:column value="{!c.country}"/>
+            <apex:column value="{!c.Phone}"/>
+            <apex:column value="{!c.Email}"/>
+            <apex:column headerValue="Action"  >
+            <!-- <a href="/email/author/emailauthor.jsp?p2_lkid={!c.Id}&rtype=00Q&retURL=%2F{!c.Id}&template_id=00X90000000MQJH">Send E-Mail</a> -->         
+            <a href="https://ap1.salesforce.com/email/author/emailauthor.jsp?p2_lkid={!c.Id}&rtype=00Q&retURL=%2F{!c.Id}&template_id=00X90000000MQJH">Send E-Mail</a>         
+             </apex:column>
+            </apex:pageBlockTable>
+       </apex:pageBlock>
+    </apex:form>
+</apex:page>

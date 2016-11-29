@@ -1,0 +1,11 @@
+<apex:page wizard="true" >
+            <H2> Hello  </H2><h1>{!$User.FirstName}!</h1><br/>
+            <p>
+          <B>MDMS 2.0 Update has been scheduled for July 10,2013!</B><br/>
+           <B>The following components have been changed.</B>
+              <B><li>1. Call management</li></B>
+               <B><li>2. CLM</li></B>
+                
+                <B>The detailed release note is avaible in this link : </B>
+                </p>
+      </apex:page>

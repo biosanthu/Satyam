@@ -1,0 +1,64 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" standardController="Merchandise__c" extensions="MobileInventoryExtension" recordSetVar="products">
+<apex:stylesheet value="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+<apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>
+<apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.1.0/jquery.mobile-1.1.0.min.js"/>
+<head>
+  <title>Mobile Inventory</title>
+  ￼<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <script>
+var j$ = jQuery.noConflict();
+      var dataChanged = false;
+     
+      j$(document).ready(function() {
+         
+          j$(".updateBtn").click(function() {
+              var id = j$(this).attr('data-id');
+              var inventory = parseInt(j$("#inventory"+id).val());
+              j$.mobile.showPageLoadingMsg();
+              MobileInventoryExtension.updateMerchandiseItem(id,inventory,handleUpdate);
+          });
+     });
+     
+     
+      function handleUpdate(result,event) {
+          alert(result);
+          if(result == 'Item Updated') { dataChanged = true; }
+          j$.mobile.hidePageLoadingMsg();
+      }
+ </script>
+</head>
+<body>
+<div data-role="page" data-theme="b" id="mainpage">
+   <div data-role="header">
+      <h1>Warehouse Inventory</h1>
+   </div>
+   <div data-role="content">
+      <ul data-inset="true" data-role="listview" data-theme="c" data-dividertheme="c">
+<apex:repeat value="{!products}" var="product">  
+         <li>
+             <a href="#detailpage{!product.Id}"><h3><apex:outputField value="{!product.Name}"/></h3>
+             <p><apex:outputField value="{!product.Description__c}"/></p></a>
+         </li>
+</apex:repeat>        
+      </ul>
+   </div>
+</div>  
+<apex:repeat value="{!products}" var="product">  
+<div data-role="page" data-theme="b" id="detailpage{!product.Id}">
+   <div data-role="header">
+      <a href='#mainpage' id="backInventory" class='ui-btn-left' data-icon='arrow-l'>Inventory</a>
+      <h1><apex:outputField value="{!product.Name}"/></h1>
+   </div>
+   <div data-role="content">
+       <strong>Price:</strong><apex:outputField value="{!product.Price__c}" /><br />
+       <strong>Description:</strong><BR />
+       <apex:outputField value="{!product.Description__c}" />
+       <p>
+       <strong>Total Inventory:</strong><input type="text" id="inventory{!product.Id}" value="{!product.Total_Inventory__c}" />
+       </p>
+       <button id="update{!product.Id}" data-id="{!product.Id}" class="updateBtn" >Update</button>
+   </div>
+</div>
+</apex:repeat>
+</body>
+</apex:page>

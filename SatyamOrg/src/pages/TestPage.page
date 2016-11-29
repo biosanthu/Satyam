@@ -1,0 +1,9 @@
+<apex:page controller="TestPageController">
+    <apex:form >
+        <c:TreeView selectable="false" roleOrUserId="00E90000000He0ZEAS" value="{!selectedValues}" />
+        <br/>
+        Value:<apex:outputText value="{!selectedValues}" />
+        <br/>
+        <apex:commandButton value="Get Value" />
+    </apex:form>
+</apex:page>

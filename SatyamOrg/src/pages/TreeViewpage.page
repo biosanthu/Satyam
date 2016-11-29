@@ -1,0 +1,40 @@
+<apex:page sidebar="false" controller="treenodes" showheader="false">
+<!-- Include the Jquery Script files -->
+    <link rel="stylesheet" href="{!URLFOR($Resource.Jtreeview,'Jquerytreeview/jquery.treeview.css')}"/>
+    <script src="{!URLFOR($Resource.Jtreeview,'Jquerytreeview/jquery.js')}" type="text/javascript"></script>
+    <script src="{!URLFOR($Resource.Jtreeview,'Jquerytreeview/jquery.cookie.js')}" type="text/javascript"></script>
+    <script src="{!URLFOR($Resource.Jtreeview,'Jquerytreeview/jquery.treeview.js')}" type="text/javascript"></script>
+<!-- End of Javascript files -->
+<script type="text/javascript">
+        $(function() {
+            $("#tree").treeview({
+                collapsed: false,
+                animated: "medium",
+                control:"#sidetreecontrol",
+                persist: "location"
+            });
+        })
+</script>
+<br/> <br/> <br/>
+<!-- Tree -->
+<div class="treeheader" style="height:0px;">&nbsp;</div>
+<div id="sidetreecontrol"><a href="?#"><font style="color:blue;">Collapse All</font></a> | <a href="?#"><font style="color:blue;">Expand All</font></a></div>
+<ul id="tree">
+    <apex:repeat value="{!mainnodes}" var="parent">
+        <li><strong><apex:outputtext style="color:blue;" escape="false" value="{!parent.gparent.Name}"/></strong>
+             <ul>
+                 <apex:repeat value="{!parent.parent}" var="child">
+                    <li><span class="formattextcon"><apex:outputtext style="color:green;" escape="false" value="{!child.LastName}"/></span>
+                        <ul>
+                            <apex:repeat value="{!child.Cases}" var="gchildren">
+                               <li> <span class="formattextcon"> <apex:outputtext escape="false" style="color:red;" value="{!gchildren.CaseNumber}"/> <b>||</b> &nbsp;<apex:outputtext escape="false" value="{!gchildren.Subject}"/> </span> </li>
+                            </apex:repeat>
+                        </ul>       
+                    </li>
+                 </apex:repeat>  
+             </ul>  
+        </li>
+    </apex:repeat>
+</ul>
+<!-- End of Tree -->       
+</apex:page>

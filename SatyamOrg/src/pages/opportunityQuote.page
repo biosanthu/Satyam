@@ -1,0 +1,56 @@
+<apex:page Controller="OliControl" renderAs="Pdf" sidebar="false" >
+<apex:form id="OpportunityQuote">
+<apex:sectionHeader title="Opportunity - Quotation"/>
+         <apex:pageBlock title="Opportunity - Information" >
+       <apex:repeat value="{!opportunities}" var="c">
+       <b>{!$ObjectType.opportunity.fields.name.label} &nbsp;&nbsp;&nbsp; :</b> &nbsp;<apex:outputfield value="{!c.name}" /><br/>
+       <b>{!$ObjectType.opportunity.fields.Stagename.label} &nbsp;&nbsp; :</b> &nbsp;<apex:outputfield value="{!c.stagename}" /><br/>
+       <b>{!$ObjectType.opportunity.fields.type.label} &nbsp; :</b> &nbsp;<apex:outputfield value="{!c.type}" /><br/>
+       <b>{!$ObjectType.opportunity.fields.amount.label} &nbsp; :</b> &nbsp;<apex:outputfield value="{!c.amount}" /><br/>
+       <b>{!$ObjectType.opportunity.fields.leadsource.label} &nbsp; :</b> &nbsp;<apex:outputfield value="{!c.leadsource}" /><br/>
+      <b>{!$ObjectType.opportunity.fields.createdDate.label} &nbsp; :</b> &nbsp;<apex:outputfield value="{!c.createdDate}" /><br/><br/>
+      </apex:repeat>
+      </apex:pageBlock> 
+     
+        <apex:pageBlock >
+     <apex:repeat value="{!opportunities}" var="c">
+
+       Dear {!c.account.name},
+       <br/>
+           &nbsp;&nbsp;&nbsp; <apex:outputLabel value="Thank you for taking the time to meet with {!$Organization.Name} and to learn how our solutions can meet your organization’s needs. As promised, I have put together a quote covering the products and services that we discussed during our recent meeting."></apex:outputLabel>       
+        </apex:repeat>
+                                <br/><br/>
+            <b>Marketing Object list (Custom Object)</b>
+            <apex:pageBlockTable value="{!MarketingObjects}" var="m" align="center"  border="1" align="center"   columns="4">
+            <apex:column headerValue="Name" value="{!m.name}" />
+            <apex:column headerValue="Customer Identity" value="{!m.Customer_Number__c}" />
+             <apex:column headerValue="Created Date" value="{!m.createdDate}" />
+             <apex:column headerValue="Opportunity Name" value="{!m.Opportunity_Name__c}" />
+            </apex:pageBlockTable>
+           <br/>
+             <apex:pageBlockTable value="{!opportunities}" var="c" align="center"  columns="4">
+                  <apex:column headerValue="Product Information">
+                  <apex:datatable value="{!c.OpportunityLineItems}" var="s" border="1" align="center" styleClass="italicText" >
+                  <apex:column headerValue="Name" value="{!s.PricebookEntry.Name}" />
+                  <apex:column headerValue="Description" value="{!s.Description}" />
+                  <apex:column headerValue="Product Code" value="{!s.PricebookEntry.ProductCode}" />
+                  <apex:column headerValue="Quantity" value="{!s.Quantity}" />
+                  <apex:column headerValue="UnitPrice" value="{!s.UnitPrice}" />
+                  <apex:column headerValue="Total Price" value="{!s.TotalPrice}" />
+                 </apex:datatable>
+           </apex:column>
+           </apex:pageBlockTable><br/>
+           &nbsp;&nbsp;
+           Let me know if you have any questions and when would be convenient for you and your staff to begin discussing final terms of a contract.
+           <center><apex:outputText value="Thank you," /></center><br/>
+           Sincerely,
+           <br/>
+           
+           <b> &nbsp;{!$User.Title}</b><br/>
+<b> &nbsp;{!$User.CompanyName}</b><br/>
+<b> &nbsp;{!$User.Email}</b><br/>
+ 
+
+           </apex:pageBlock>
+    </apex:form>
+</apex:page>

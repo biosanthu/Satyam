@@ -1,0 +1,45 @@
+<apex:page standardController="Lead" recordSetVar="JobApps">
+<apex:form >
+<!--<script>
+    window.onload = function()
+    {
+        var tbObj = document.getElementById("$Component.candidateTable");
+        var md = document.getElementById("mydiv");
+        md.style.width = md.clientWidth + 'px';
+        tbObj.style.display = "inline";
+    }
+</script> -->
+<apex:pageblock id="thePageBlock">
+
+<apex:actionRegion >
+<apex:outputText value="Records per page: ">
+</apex:outputText>
+<apex:selectList value="{!pagesize}" size="1">
+<apex:selectOption itemLabel="5" itemValue="5"></apex:selectOption>
+<apex:selectOption itemLabel="10" itemValue="10"></apex:selectOption>
+<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+<apex:selectOption itemLabel="25" itemValue="25"></apex:selectOption>
+<apex:selectOption itemLabel="200" itemValue="200"></apex:selectOption>
+<apex:actionSupport event="onchange" rerender="thePageBlock, navigation"/>
+</apex:selectList>
+</apex:actionRegion>
+
+<div id="mydiv" style="height:200px;overflow:auto;">
+<apex:pageblocktable style="display:rows" value="{!JobApps}" var="JA"  id="candidateTable" >
+<apex:column value="{!JA.Name}"/>
+<apex:column value="{!JA.Company}"/>
+<apex:column value="{!JA.Title}"/>
+</apex:pageblocktable>
+</div>
+</apex:pageblock>
+<apex:panelGrid columns="2" id="navigation">
+<apex:commandLink action="{!previous}"
+rendered="{!hasPrevious}">
+Previous</apex:commandLink>
+<apex:commandLink action="{!next}"
+rendered="{!hasNext}">
+Next</apex:commandLink>
+</apex:panelGrid> 
+</apex:form>
+</apex:page>

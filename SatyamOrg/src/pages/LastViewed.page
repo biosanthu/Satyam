@@ -1,0 +1,2 @@
+<apex:page action="{!updateField}" extensions="lastViewed" showheader="false" sidebar="false" standardcontroller="Account">
+</apex:page>

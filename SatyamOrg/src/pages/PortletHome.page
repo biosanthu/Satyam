@@ -1,0 +1,26 @@
+<!-- 
+/*
+ * SF Portlets Header - Do not remove!
+ *
+ * $Author: Aslam Bari  $
+ * $Change:  $
+ * $DateTime: 12 Oct, 2010 $
+ * $File: PortletHome.page $
+ * $Id:  $
+ * $Revision:  1.0 $
+ */
+ -->
+<apex:page controller="PortletHomeController" sidebar="true" showHeader="{!config.settings.Show_Header__c}">
+<c:PortletHeader portletWidth="{!config.portletWidth}" themename="{!config.settings.Theme__c}"/>
+<c:PortletSectionHeader title="{!config.settings.Section_Title__c}" subtitle="{!config.settings.Section_Subtitle__c}" logo="/servlet/servlet.FileDownload?file={!config.logoId}" rendered="{!config.settings.Show_Section_Bar__c}"/>
+
+<div class="demo">
+    <apex:repeat value="{!allPortletList}" var="portletList">
+    <div class="column">
+        <apex:repeat value="{!portletList}" var="portlet">
+            <c:Portlet portlet="{!portlet}" />
+        </apex:repeat>
+    </div>
+    </apex:repeat>
+</div>
+</apex:page>

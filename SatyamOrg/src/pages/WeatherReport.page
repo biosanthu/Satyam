@@ -1,0 +1,20 @@
+<apex:page StandardController="Opportunity"  extensions="WeatherRequest">
+<apex:form >
+        <apex:pageBlock title="Get Weather">
+          <apex:commandButton action="{!GetWeather}"  value="Request"/ >
+             <p/>
+              <table>
+             <tr>
+                <td align="left"><B>Start Time : </B><apex:outputText rendered="{!result<>''}" value="{!ST}" /></td>
+                <td align="right"><B>End Time : </B><apex:outputText rendered="{!result<>''}" value="{!ET}" /></td>
+             </tr>
+             </table>
+                       
+             
+            Results:  <B><apex:outputText value="{!Result}"/></B>  
+            <p/>    
+            
+        </apex:pageBlock>
+        
+  </apex:form>
+</apex:page>

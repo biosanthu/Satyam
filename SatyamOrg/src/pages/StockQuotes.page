@@ -1,0 +1,26 @@
+<apex:page controller="GetQuote">
+<apex:form >
+        <apex:pageBlock title="Stock Quote">
+          <!--  <apex:commandButton action="{!getStock}"  value="Request"/ >
+            <p/>                                               
+            Results:  <B><apex:outputText  value="{!Result}"/></B>  
+            <p/>  -->
+          <apex:outputLabel value="Stock Quotes" />          
+          <apex:outputPanel >
+            <apex:selectList value="{!searchBy}" multiselect="false" size="1" id="SearchBy" style="width:155px;">
+              <apex:actionSupport event="onchange"  rerender="stock" status="refreshstatus" />
+              <apex:selectOptions value="{!searchBySymbol}"/>
+            </apex:selectList>
+            <apex:actionStatus id="refreshstatus" startstyle="color:#15428B;" startText="Refreshing....." /> 
+          </apex:outputPanel>
+        </apex:pageBlock>  
+        <apex:pageBlock id="stock" title="Stock Quote">            
+            <apex:pageblocktable value="{!std}" var="f">
+            <apex:column headerValue="Symbol" value="{!f.Symbol}" />
+            <apex:column headerValue="Last Price" value="{!f.LastPrice}" />
+            <apex:column headerValue="Date Time" value="{!f.sDate} {!f.sTime}" />
+            <apex:column headerValue="Change" value="{!f.Change}" />
+            </apex:pageblocktable>                      
+        </apex:pageBlock>       
+  </apex:form>
+</apex:page>

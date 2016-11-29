@@ -1,0 +1,7 @@
+<apex:page controller="TransientExController" cache="true" >
+    Time without transient: {!T1} <br/>
+    Time with transient: {!T2} <br/>
+    <apex:form >
+    <apex:commandButton value="Refresh"/>
+    </apex:form>
+</apex:page>

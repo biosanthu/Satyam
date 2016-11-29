@@ -1,0 +1,9 @@
+<apex:page sidebar="false"   >
+
+ <!-- <apex:enhancedList type="Lead" height="350"  listId="00B90000000UUhr"  rowsPerPage="10" customizable="false"  id="AccountList" /> -->
+  
+   <apex:enhancedList type="Account" height="300" rowsPerPage="10" id="AccountList" />
+    <apex:enhancedList type="Lead" height="300" rowsPerPage="25"
+        id="LeadList" customizable="False" />
+  <apex:iframe src="https://ap1.salesforce.com/a0X90000000DwzP" scrolling="true" id="theIframe"/>
+ </apex:page>

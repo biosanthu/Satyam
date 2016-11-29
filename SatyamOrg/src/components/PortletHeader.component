@@ -1,0 +1,86 @@
+<!-- 
+/*
+ * SF Portlets Header - Do not remove!
+ *
+ * $Author: Aslam Bari  $
+ * $Change:  $
+ * $DateTime: 12 Oct, 2010 $
+ * $File: PortletHeader.component $
+ * $Id:  $
+ * $Revision:  1.0 $
+ */
+ -->
+<apex:component access="global">
+  <apex:attribute name="portletWidth" assignTo="{!portletWidth}" description="Portlet Width" type="string" required="false"/>
+  <apex:attribute name="themename" assignTo="{!themename}" description="Portlet Theme" type="string" required="false"/>
+  <head>
+    <title>SF - Portlets</title>
+    <link type="text/css" href="{!URLFOR($Resource.sf_portlets_jquery,'sf_portlets_jquery/themes/ui-lightness/jquery-ui-1.7.3.custom.css')}" rel="stylesheet" />
+    <apex:outputPanel rendered="{!themename == 'Blacktie'}">
+        <link type="text/css" href="{!URLFOR($Resource.sf_portlets_jquery,'sf_portlets_jquery/themes/black-tie/jquery-ui-1.7.3.custom.css')}" rel="stylesheet" />
+    </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!themename == 'SouthStreet'}">
+        <link type="text/css" href="{!URLFOR($Resource.sf_portlets_jquery,'sf_portlets_jquery/themes/south-street/jquery-ui-1.7.3.custom.css')}" rel="stylesheet" />
+    </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!themename == 'Redmond'}">
+        <link type="text/css" href="{!URLFOR($Resource.sf_portlets_jquery,'sf_portlets_jquery/themes/redmond/jquery-ui-1.7.3.custom.css')}" rel="stylesheet" />
+    </apex:outputPanel>
+    <script type="text/javascript" src="{!URLFOR($Resource.sf_portlets_jquery,'sf_portlets_jquery/jquery-1.3.2.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.sf_portlets_jquery,'sf_portlets_jquery/ui.core.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.sf_portlets_jquery,'sf_portlets_jquery/ui.sortable.js')}"></script>
+    <link type="text/css" href="{!URLFOR($Resource.sf_portlets_jquery,'sf_portlets_jquery/demos.css')}" rel="stylesheet" />
+    <style type="text/css">
+    .column { width: {!portletWidth}px; float: left; padding-bottom: 100px; }
+    .portlet { margin: 0 1em 1em 0; }
+    .portlet-header { margin: 0.3em; padding-bottom: 4px; padding-left: 0.2em; }
+    .portlet-header .ui-icon { float: right; }
+    .portlet-content { padding: 0.4em; }
+    .ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
+    .ui-sortable-placeholder * { visibility: hidden; }
+    .portlet-section-header{
+        font-size:16px;
+        font-weight:bold;
+        line-height:1.1em;
+        margin:0px;
+    }
+    .portlet-section-subheader{
+        font-size:14px;
+        font-weight:bold;
+        line-height:1.1em;
+        margin:0px;
+    }
+    .sf-heading{
+        text-transform:capitalize;
+    }
+    .sf-table{
+        border-collapse:collapse;
+    }
+    .sf-table td{
+        border:1px solid #e6e6e6;
+    }
+    </style>
+    <script type="text/javascript">
+    $(function() {
+        $(".column").sortable({
+            connectWith: '.column'
+        });
+
+        $(".portlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
+            .find(".portlet-header")
+                .addClass("ui-widget-header ui-corner-all")
+                .prepend('<span class="ui-icon ui-icon-plusthick"></span>')
+                .end()
+            .find(".portlet-content");
+
+        $(".portlet-header .ui-icon").click(function() {
+            $(this).toggleClass("ui-icon-minusthick");
+            $(this).parents(".portlet:first").find(".portlet-content").toggle();
+        });
+
+        $(".column").disableSelection();
+    });
+    </script>
+    </head>
+</apex:component>

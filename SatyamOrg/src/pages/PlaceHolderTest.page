@@ -1,0 +1,5 @@
+<apex:page docType="html-5.0">
+    <apex:form >
+        <apex:input html-placeholder="Enter Your Name"/>
+    </apex:form>
+</apex:page>

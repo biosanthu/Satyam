@@ -1,0 +1,62 @@
+<apex:page controller="newOpportunityController" sidebar="false" tabStyle="Wizard__tab">
+<script>
+function confirmCancel() {
+var isCancel = confirm("Are you sure you wish to cancel?");
+if (isCancel) return true;
+return false;
+}
+</script>
+<apex:sectionHeader title="New Customer Opportunity" subtitle="Step 3 of 3"/>
+<apex:form >
+<apex:pageBlock title="Confirmation">
+<apex:pageBlockButtons >
+<table width="100%" align="center">
+    <tr>
+        <td style="padding-left:100px;">
+            
+<apex:commandButton action="{!step2}" image="{!$Resource.Previous}" value="Previous"/>
+<apex:commandButton action="{!save}" image="{!$Resource.Right}" value="Save"/>
+<apex:commandButton action="{!cancel}" image="{!$Resource.Wrong}" value="Cancel"
+onclick="return confirmCancel()" immediate="true"/>
+</td>
+</tr>
+</table>
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="Account Information">
+<apex:outputField value="{!account.name}"/>
+<apex:outputField value="{!account.site}"/>
+<apex:outputField value="{!account.BillingStreet}"/>
+<apex:outputField value="{!account.BillingCity}"/>
+<apex:outputField value="{!account.BillingState}"/>
+<apex:outputField value="{!account.ShippingStreet}"/>
+<apex:outputField value="{!account.ShippingCity}"/>
+<apex:outputField value="{!account.ShippingState}"/>
+<apex:outputField value="{!account.type}"/>
+<apex:outputField value="{!account.fax}"/>
+</apex:pageBlockSection>
+<apex:pageBlockSection title="Contact Information">
+<apex:outputField value="{!contact.firstName}"/>
+<apex:outputField value="{!contact.lastName}"/>
+<apex:outputField value="{!contact.phone}"/>
+<apex:outputField value="{!contact.mailingstreet}"/>
+<apex:outputField value="{!contact.mailingcity}"/>
+<apex:outputField value="{!contact.mailingstate}"/>
+<apex:outputField value="{!role.role}"/>
+</apex:pageBlockSection>
+<apex:pageBlockSection title="Opportunity Information">
+<apex:outputField value="{!opportunity.name}"/>
+<apex:outputField value="{!opportunity.amount}"/>
+<apex:outputField value="{!opportunity.closeDate}"/>
+<apex:outputField value="{!opportunity.description}"/>
+<apex:outputField value="{!opportunity.MainCompetitors__c}"/>
+</apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+<table width="100%">
+    <tr>
+        <td  style="padding-left:400px;background-color:#77b900;color:white" height="30px">
+                <h1> Step 3 of 3 </h1>
+        </td>
+    </tr>
+</table>
+</apex:page>

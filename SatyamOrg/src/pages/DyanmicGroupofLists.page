@@ -1,0 +1,11 @@
+<apex:page controller="DisplaySectionsController" action="{!load}" sidebar="false" >
+<apex:repeat value="{!states}" var="state">
+<apex:pageBlock title="{!state}">
+<apex:repeat value="{!accounts}" var="a">
+<apex:outputPanel rendered="{!IF(state=a.BillingState,true,false)}">
+<b><font size="2" color="#00A3CC">{!a.Name}</font></b> -{!a.BillingStreet},{!a.BillingCity},{!a.BillingState},{!a.BillingPostalCode},{!a.BillingState}<br/>
+</apex:outputPanel>
+</apex:repeat>
+</apex:pageBlock>
+</apex:repeat>
+</apex:page>

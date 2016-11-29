@@ -1,0 +1,41 @@
+<apex:page Controller="LeadCusControl" action="{!Search}" tabstyle="case" sidebar="false" >
+<apex:form id="changeStatusForm">
+        <apex:pageBlock id="pb1" >
+        <apex:pageMessages />
+            <apex:pageBlockTable value="{!leads}" rows="{!pages}" var="c" columns="7">
+            <apex:column value="{!c.Name}"/>
+            <apex:column value="{!c.Company}"/>
+            <apex:column value="{!c.Title}"/>
+            <apex:column headerValue="Recent Activity">
+                  <apex:dataTable value="{!c.Tasks}" var="s" >
+                      <apex:column value="{!s.subject}" />
+                  </apex:dataTable>
+           </apex:column>
+            <apex:column value="{!c.City}"/>
+                        <apex:column headerValue="Action"  >
+                        <a href="/00T/e?who_id={!c.id}&retURL=%2F{!c.id}">Next Activity </a>         
+                        <a href="/{!c.id}/e?retURL=%2F{!c.id}" > / EditLead</a>
+            </apex:column>
+            <apex:column headerValue="Opportunity">
+            <apex:outputLink value="{!URLFOR($Action.Opportunity.New)}">
+NewOpprtunity
+</apex:outputLink>
+           </apex:column>
+        </apex:pageBlockTable> 
+      <table width="100%">
+      <tr><td align="left" ><apex:commandButton value="Prev"  action="{!Prev}" rendered="{!showprev}"  rerender="pb1"/></td>
+          <td align="Center"><b><apex:outputtext rendered="{!NOT(ISNULL(Leads))}"  value="{!LdList_Size}  records in Lead"/></b></td>
+          <td align="right"><apex:commandButton value="Next"  action="{!Next}" rendered="{!shownext}"  rerender="pb1"/></td></tr>
+          </table>
+          <apex:actionRegion >
+<apex:outputText value="Records per page: ">
+</apex:outputText>
+<apex:selectList value="{!pages}" size="1">
+ <apex:selectOptions value="{!Pageno}"/>
+ <apex:actionSupport event="onchange" rerender="pb1"/>
+</apex:selectList>
+</apex:actionRegion>
+
+</apex:pageBlock> 
+</apex:form>
+</apex:page>

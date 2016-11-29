@@ -1,0 +1,16 @@
+<apex:page Controller="CustomerWizard"  sidebar="false" tabStyle="account">
+<apex:form >
+<apex:pageBlock title="Customer Service"  mode="edit" >
+<apex:pageBlockButtons >
+<apex:commandButton action="{!step2}" value="Step3" />
+<apex:commandButton action="{!cancel}" value="Cancel" />
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="Complaint Information">
+<apex:inputField id="complaint" value="{!Customer.Complaint__c}"/>
+<apex:inputField id="complaintdate" value="{!Customer.Compliant_Date__c}"/>
+<apex:inputField id="status1" value="{!Customer.Status_1__c}"/>
+<apex:inputField id="status2" value="{!Customer.Status_2__c}"/>
+  </apex:pageBlockSection>
+  </apex:pageBlock>
+  </Apex:form> 
+</apex:page>

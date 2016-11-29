@@ -1,0 +1,22 @@
+<apex:page standardController="Task" tabstyle="Task" extensions="taskExt">
+    <apex:form >
+       <apex:sectionHeader title="Task" subtitle="{!t.Subject}"></apex:sectionHeader>
+        <apex:pageBlock title="Task Edit" id="thePageBlock" mode="edit">
+            <apex:pageMessages />
+            <apex:pageBlockButtons location="both">
+                <apex:commandButton value="Save" action="{!save}" />
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+            <apex:pageblockSection title="Task Information">
+                <apex:inputfield value="{!t.OwnerID}" />
+                <apex:inputfield required="false" id="task__status" value="{!t.Status}" />
+                <apex:inputfield required="false" id="task__subject" value="{!t.Subject}" />
+                <apex:inputfield id="task__type" value="{!t.type}" />
+                <apex:inputfield required="false" id="task__activitydate" value="{!t.ActivityDate}" />
+                <apex:inputfield id="task__name" value="{!t.WhoId}" />
+                <apex:inputfield required="false" id="task__priority" value="{!t.Priority}" />
+                <apex:inputfield id="task__relatedto" value="{!t.WhatId}" />
+            </apex:pageblockSection>
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

@@ -1,0 +1,14 @@
+<apex:page controller="DynamicBinding">
+  
+   <apex:form >
+       <apex:pageBlock title="Without Field Set Use">
+       <apex:pageBlockSection title="Dynamic Object">
+           <apex:repeat value="{!listObjectFields}" var="fieldAPIName">
+               <apex:inputField value="{!sObjectToBind[fieldAPIName]}"/>
+           </apex:repeat>
+       </apex:pageBlockSection>
+       </apex:pageBlock>
+   </apex:form>
+
+
+</apex:page>

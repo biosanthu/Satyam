@@ -1,0 +1,35 @@
+<apex:page standardController="Account" showHeader="true" extensions="rssFeedController" >
+<apex:form >
+  <div id="ReuterNews_div">
+<apex:outputPanel id="NewsPnlPnl"  >
+<apex:outputPanel id="NewsPnl" >
+<table width="100%"><tr><td align="left">
+<apex:outputlabel value="{!FeedTitle}" Style="color:#k15428B;font-weight:bold;"/></td>
+<td align="right"><apex:commandLink action="{!GetFeedRefresh}" rerender="feedblock" id="theCommandLink"><apex:image id="theImage" value="{!$Resource.Rss_refresh}"/>
+<apex:actionSupport event="onclick"  rerender="feedblock" status="refreshstatus"/>
+</apex:commandLink></td></tr></table>
+<apex:actionStatus id="refreshstatus" startstyle="color:#15428B;" startText="Refreshing....." />
+<apex:pageBlock id="feedblock">
+<!-- <apex:pageMessages />  -->
+                                                
+            <apex:pageblocktable value="{!Feeds}" var="f">
+              <apex:column >
+                <B><apex:outputLink value="{!f.link}" id="theLink">{!f.title}</apex:outputLink></B><br/>
+                <apex:outputText escape="true" value="{!f.description}"/>   
+              </apex:column>
+            </apex:pageblocktable>
+            <div class="more">
+            <table width="100%">
+      <tr><td align="left" ><apex:commandLink value="Prev"  action="{!Prev}" rendered="{!showprev}" style="text-decoration:underline" rerender="feedblock"/></td>
+          <td align="Center"><b><apex:outputtext rendered="{!NOT(ISNULL(Feeds))}"  value="There are {!Feedsize} updated News Feeds!"/></b></td>
+          <td align="right"><apex:commandLink value="Next"  action="{!Next}" rendered="{!shownext}" style="text-decoration:underline" rerender="feedblock"/></td></tr>
+      </table>
+      </div>
+        </apex:pageBlock>
+
+        </apex:outputPanel>
+        <apex:actionStatus startText="Loading content..." id="myStatus" />  
+</apex:outputPanel> 
+</div>
+</apex:form>
+</apex:page>

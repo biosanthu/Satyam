@@ -1,0 +1,9 @@
+<apex:page sidebar="false" showHeader="false" >
+ <apex:pageBlock >
+ <apex:pageBlockSection title="Opportunity">
+<chatter:feedWithFollowers entityId="006900000025iJO" rendered="true"/>
+<!--<chatter:followers entityId="006900000025iJO"/> -->
+</apex:pageBlockSection>
+</apex:pageBlock>  
+  
+</apex:page>

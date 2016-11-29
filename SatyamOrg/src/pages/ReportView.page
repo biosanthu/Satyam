@@ -1,0 +1,32 @@
+<apex:page controller="accountsWithOpptysCon" sidebar="false" tabStyle="Account">
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!accounttotals}" var="a" >
+        <apex:column >
+        <apex:dataTable value="{!a.account.opportunities}" var="o">
+                    <apex:column value="{!o.name}"/>
+                    <apex:column value="{!o.Contract_Value__c}"/>
+                    
+                    </apex:dataTable>
+                     </apex:column>
+                        <apex:column >
+                     
+                      <table width="100%">
+                 <tr>
+                     <td>
+                       <b>Total</b>
+                     </td>
+                     <td style="padding-left:365px;" align="left">
+                       <b><apex:outputField value="{!a.total.Contract_Value__c}"/></b>
+                     </td>
+                  </tr>
+             </table>
+                     
+                      </apex:column>               
+                    
+                </apex:pageBlockTable>
+              
+             
+           
+         
+    </apex:pageBlock>
+</apex:page>

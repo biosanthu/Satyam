@@ -1,0 +1,53 @@
+<apex:page controller="newOpportunityController" sidebar="false" tabStyle="wizard__tab" >
+<script>
+function confirmCancel() {
+var isCancel = confirm("Are you sure you wish to cancel?");
+if (isCancel) return true;
+return false;
+}
+</script>
+<apex:sectionHeader title="New Customer Opportunity"  subtitle="Step 2 of 3"/>
+<apex:form >
+
+<table width="100%">
+<tr>
+<td>
+<apex:pageBlock title="" mode="edit">
+<apex:pageBlockButtons >
+<table width="100%" align="center">
+    <tr>
+        <td style="padding-left:90px;">
+            <apex:commandButton action="{!step1}" image="{!$Resource.Previous}" value="Previous"/>
+            <apex:commandButton action="{!step3}" image="{!$Resource.Next}" value="Next"/>
+            <apex:commandButton action="{!cancel}" image="{!$Resource.Wrong}"  value="Cancel"
+            onclick="return confirmCancel()" immediate="true"/>
+        </td>
+    </tr>
+</table>
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="Opportunity Information">
+<apex:inputField id="opportunityName"  value="{!opportunity.name}"/>
+<apex:inputField id="opportunityAmount" value="{!opportunity.amount}"/>
+<apex:inputField id="opportunityCloseDate" value="{!opportunity.closeDate}"/>
+<apex:inputField id="opportunityStageName" value="{!opportunity.stageName}"/>
+<apex:inputField id="description" value="{!opportunity.description}"/>
+<apex:inputField id="cbx"  value="{!opportunity.IsPrivate}"/>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="Role Information">
+<apex:inputField id="contactRole" value="{!role.role}"/>
+</apex:pageBlockSection>
+
+</apex:pageBlock>
+</td>
+</tr>
+</table>
+</apex:form>
+<table width="100%">
+    <tr>
+        <td  style="padding-left:400px;background-color:#77b900;color:white" height="30px">
+                <h1> Step 2 of 3 </h1>
+        </td>
+    </tr>
+</table>
+</apex:page>

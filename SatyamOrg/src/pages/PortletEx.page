@@ -1,0 +1,44 @@
+<apex:page >
+
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+    <title>Portal Layout Sample</title> 
+ 
+    <link rel="stylesheet" type="text/css" href="http://dev.sencha.com/deploy/ext-4.0.0/resources/css/ext-all.css" /> 
+    <link rel="stylesheet" type="text/css" href="http://dev.sencha.com/deploy/ext-4.0.0/examples/portal/portal.css" /> 
+ 
+    <script type="text/javascript" src="http://dev.sencha.com/deploy/ext-4.0.0/builds/ext-core.js"></script> 
+ 
+    <!-- shared example code --> 
+    <script type="text/javascript" src="http://dev.sencha.com/deploy/ext-4.0.0/examples/shared/examples.js"></script> 
+    <script type="text/javascript" src="http://dev.sencha.com/deploy/ext-4.0.0/examples/portal/classes.js"></script> 
+ 
+    <script type="text/javascript" src="http://dev.sencha.com/deploy/ext-4.0.0/examples/portal/portal.js"></script> 
+    <script type="text/javascript"> 
+        Ext.Loader.setPath('Ext.app', 'classes');
+ 
+        Ext.require([
+            'Ext.layout.container.*',
+            'Ext.resizer.Splitter',
+            'Ext.fx.target.Element',
+            'Ext.fx.target.Component',
+            'Ext.window.Window',
+            'Ext.app.Portlet',
+            'Ext.app.PortalColumn',
+            'Ext.app.PortalPanel',
+            'Ext.app.Portlet',
+            'Ext.app.PortalDropZone',
+            'Ext.app.GridPortlet',
+            'Ext.app.ChartPortlet'
+        ]);
+ 
+        Ext.onReady(function(){
+            Ext.create('Ext.app.Portal');
+        });
+    </script> 
+</head> 
+<body> 
+    <span id="app-msg" style="display:none;"></span> 
+</body> 
+ 
+</apex:page>

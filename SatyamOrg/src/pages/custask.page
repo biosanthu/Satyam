@@ -1,0 +1,59 @@
+<apex:page controller="DashboardTaskController" standardStylesheets="true" showHeader="true">
+<apex:form id="taskList">
+<script>
+function checkIfNeedRefresh()
+{
+                //alert('checking for full refresh');
+                var left = document.getElementById('{!$Component.taskList.numberOfItemsLeft}');
+                //alert('found items left todo : ' + left.innerHTML);
+                var tmp = parseInt(left.innerHTML);
+                if (tmp == NaN || tmp == 0) {  
+                    parent.refreshPage(); 
+                } 
+            }        
+</script>
+<apex:pageBlock id="pageBlock" title="Task List">
+            <apex:pageBlockButtons >
+                    <apex:commandButton action="{!save}" value="Save" id="theButton"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!tasks}" var="o" id="table">
+            
+                <apex:column >
+                    <apex:commandLink action="{!showDetail}" value="{!o.subject}" reRender="detail">
+                         <apex:param value="{!o.id}" name="objectId" assignTo="{!objectId}"></apex:param>
+                    </apex:commandLink>
+                </apex:column> 
+               
+                <apex:column id="status" headerValue="Status"> 
+                    <apex:inputField value="{!o.status}"/>
+                </apex:column>
+               <apex:column id="priority" headerValue="Priority"> 
+                    <apex:inputField value="{!o.priority}"/>
+                </apex:column>
+                
+                <apex:column id="ActivityDate" headerValue="Due Date" >
+                    <apex:inputField value="{!o.ActivityDate}"/>
+                </apex:column>              
+                <apex:column id="WhatId" headerValue="Related to" value="{!o.WhatId}"/>
+                <apex:column id="WhoId" headerValue="Contact/Lead" value="{!o.WhoId}"/>
+                <apex:column id="IsReminderSet" headerValue="Reminder"> 
+                    <apex:inputField value="{!o.IsReminderSet}"/>
+                </apex:column>
+                <apex:column id="ReminderDateTime" headerValue="Reminder" >
+                    <apex:inputField value="{!o.ReminderDateTime}"/>
+                </apex:column>
+                <apex:column id="Description" headerValue="Comments" >
+                    <apex:inputField value="{!o.Description}"/>
+                </apex:column>
+            
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <apex:panelGrid columns="2">
+            <apex:commandLink action="{!previous}" rendered="{!hasPrevious}">Previous Page</apex:commandlink>
+            <apex:commandLink action="{!next}" rendered="{!hasNext}">Next Page</apex:commandlink>
+        </apex:panelGrid>
+        <apex:outputText id="numberOfItemsLeft" value="{!numLeft}" style="visibility:hidden"/>
+        <apex:actionFunction action="{!refreshNumbers}" immediate="true" name="refreshNumbers" rerender="numberOfItemsLeft, detail, table" oncomplete="checkIfNeedRefresh();"/>
+    </apex:form>
+
+</apex:page>

@@ -1,0 +1,29 @@
+<apex:page controller="NewPaging" showHeader="true" sidebar="false" action="{!Search}">
+<apex:form > 
+
+ <!-- 
+ * This source code was written by SrinivasaRao Pendala. 
+ * I have made every effort and taken great care in making sure that the source
+ * code and other content included on my wiki is technically accurate.
+ * As with any code, ensure to test this code in a development environment 
+ * before attempting to run it in production.
+ -->
+
+<apex:pageBlock id="pb1">
+<p align="center"><b><apex:outputtext rendered="{!NOT(ISNULL(Accounts))}" value="Your search criteria returned {!AccList_Size} record(s)"/></b></p><br/>
+<apex:DataTable value="{!Accounts}" columnswidth="50px,50px"  var="a" cellpadding="4" border="1">
+<apex:column width="120px" headervalue="Name" value="{!a.Name}"/>
+<apex:column headervalue="Type" value="{!a.Type}"/>
+<apex:column headervalue="Owner Name" value="{!a.owner.name}"/>
+<apex:column headervalue="BillingCity" value="{!a.BillingCity}"/>
+<apex:column headervalue="BillingState" value="{!a.BillingState}"/>
+<apex:column headervalue="BillingPostalCode" value="{!a.BillingPostalCode}"/>
+<apex:column headervalue="CreatedDate" value="{!a.CreatedDate}"/>
+<apex:column headervalue="LastModifiedDate" value="{!a.LastModifiedDate}"/>
+</apex:DataTable>
+<apex:actionStatus startText="Requesting..." id="GetStatus"/>
+<apex:commandButton value="Prev" action="{!Prev}" rendered="{!showprev}" status="GetStatus" rerender="pb1"/>
+<apex:commandButton value="Next" action="{!Next}" rendered="{!shownext}" status="GetStatus" rerender="pb1"/>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

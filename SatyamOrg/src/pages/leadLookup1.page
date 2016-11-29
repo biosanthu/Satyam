@@ -1,0 +1,14 @@
+<apex:page controller="leadLookupController">
+  <apex:form >
+        <apex:pageBlock title="Lead Search">
+        <apex:outputLabel value="Email"/>:
+        <apex:inputText value="{!searchString}" />
+        <apex:facet name="footer">
+            <apex:outputPanel >
+                <apex:commandButton action="{!step2}" value="Search" />
+            </apex:outputPanel>
+        </apex:facet>
+        </apex:pageBlock>
+   </apex:form>
+
+</apex:page>

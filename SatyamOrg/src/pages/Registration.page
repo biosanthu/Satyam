@@ -1,0 +1,62 @@
+<apex:page standardController="Campaign" extensions="RegistrationControl"   sidebar="false">
+<script>
+function confirmCancel() 
+{
+var isCancel = confirm("Are you sure you wish to cancel?");
+if (isCancel) return true;
+return false;
+}
+</script>
+<style type='text/css'>
+.body1{
+     padding-left:125px;
+}
+</style>
+<apex:sectionHeader title="Event Registration"/>
+<apex:form >
+<apex:pageBlock title="Registration Form"  mode="edit" >
+<center>
+<apex:pageBlockButtons >
+<table width="100%" align="center">
+    <tr>
+        <td style="padding-left:125px;">
+            <apex:commandButton action="{!Save}"  value="Submit"/>
+            <apex:commandButton action="{!cancel}"   value="Cancel"
+                    onclick="return confirmCancel()" immediate="true"/>     
+        </td>
+    </tr>
+</table>
+</apex:pageBlockButtons>
+</center>
+<table width="100%">
+<tr>
+<td sytle="background-color:#77b900"  >
+</td>
+</tr>
+</table>
+<apex:pageBlockSection title="Event Information">
+<!--<apex:inputField id="CampaignName"  value="{!Campaign.name}"/>-->
+<apex:inputField id="EventLocation"  value="{!event.location}"/>
+<!--<apex:outputPanel  title="Start DateTime"><b>Start Date Time</b>&nbsp;&nbsp;&nbsp;&nbsp; -->
+<apex:inputField id="EventStartDate"  value="{!event.StartDateTime}"/>
+<!--</apex:outputPanel>-->
+<!--<apex:outputPanel title="EndDateTime"><b>End Date Time</b>&nbsp;&nbsp;&nbsp;&nbsp; -->
+<apex:inputField id="EventEndDate"   value="{!event.EndDateTime}"/> 
+<!--</apex:outputPanel> -->
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="User Information">
+<apex:inputField id="FName" value="{!registration.First_Name__c}"/>
+<apex:inputField id="LName"  value="{!registration.Last_Name__c}"/>
+<apex:inputField id="OrgName"  value="{!registration.Organisation__c}"/>
+<apex:inputField id="Email"  value="{!registration.Email__c}"/>
+<apex:inputField id="Address"  value="{!registration.Address__c}"/>
+<apex:inputField id="phone"  value="{!registration.Phone__c}"/>
+<apex:inputField id="city"  value="{!registration.City__c}"/>
+<apex:inputField id="state"  value="{!registration.State__c}"/>
+<apex:inputField id="postalcode"  value="{!registration.PostalCode__c}"/>
+<apex:inputField id="country"  value="{!registration.Country__c}"/>
+</apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

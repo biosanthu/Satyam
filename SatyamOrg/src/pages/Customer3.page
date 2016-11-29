@@ -1,0 +1,17 @@
+<apex:page Controller="CustomerWizard"  sidebar="false" tabStyle="account">
+<apex:form >
+<apex:pageBlock title="Customer Service"  mode="edit" >
+<apex:pageBlockButtons >
+<apex:commandButton action="{!step3}" value="Save" />
+<apex:commandButton action="{!cancel}" value="Cancel" />
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="Complaint Information">
+<apex:inputField id="orderid" value="{!Customer.Order_Id__c}"/>
+<apex:inputField id="quantity" value="{!Customer.Quantity__c}"/>
+</apex:pageBlockSection>
+<apex:pageBlockSection columns="1" title="Description">
+<apex:inputField id="notes" value="{!Customer.Notes__c}"/>
+  </apex:pageBlockSection>
+  </apex:pageBlock>
+  </Apex:form> 
+</apex:page>

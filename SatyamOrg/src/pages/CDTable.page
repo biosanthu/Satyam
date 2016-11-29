@@ -1,0 +1,8 @@
+<apex:page controller="dataTableCon1" >
+<apex:dataTable value="{!MichaelHolley}" var="t" width="965" cellpadding="2">
+
+<apex:column headerValue="Subject">{!t.Subject}</apex:column>
+
+</apex:dataTable>
+ 
+</apex:page>

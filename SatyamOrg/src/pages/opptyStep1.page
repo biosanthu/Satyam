@@ -1,0 +1,65 @@
+<apex:page controller="newOpportunityController" sidebar="false" tabStyle="Wizard__tab">
+<script>
+function confirmCancel() {
+var isCancel = confirm("Are you sure you wish to cancel?");
+if (isCancel) return true;
+return false;
+}
+</script>
+<style type='text/css'>
+.body1{
+     padding-left:125px;
+}
+</style>
+<apex:sectionHeader title="New Customer Opportunity" subtitle="Step 1 of 3"/>
+<apex:form >
+<apex:pageBlock title="Customer Information"  mode="edit" >
+<center>
+<apex:pageBlockButtons >
+<table width="100%" align="center">
+    <tr>
+        <td style="padding-left:125px;">
+            <apex:commandButton action="{!step2}"  image="{!$Resource.Next}" value="Next"/>
+            <apex:commandButton action="{!cancel}" image="{!$Resource.Wrong}" value="Cancel"
+            onclick="return confirmCancel()" immediate="true"/>        
+        </td>
+    </tr>
+</table>
+</apex:pageBlockButtons>
+</center>
+<table width="100%">
+<tr>
+<td sytle="background-color:#77b900"  >
+</td>
+</tr>
+</table>
+<apex:pageBlockSection title="Account Information">
+<apex:inputField id="accountName" value="{!account.name}"/>
+<apex:inputField id="accountSite" value="{!account.site}"/>
+<apex:inputField id="BillingStreet" value="{!account.BillingStreet}"/>
+<apex:inputField id="BillingCity" value="{!account.BillingCity}"/>
+<apex:inputField id="BillingState" value="{!account.BillingState}"/>
+<apex:inputField id="ShippingStreet" value="{!account.ShippingStreet}"/>
+<apex:inputField id="ShippingCity" value="{!account.ShippingCity}"/>
+<apex:inputField id="ShippingState" value="{!account.ShippingState}"/>
+<apex:inputField id="type" value="{!account.type}"/>
+<apex:inputField id="fax" value="{!account.fax}"/>
+</apex:pageBlockSection>
+<apex:pageBlockSection title="Contact Information">
+<apex:inputField id="contactFirstName" value="{!contact.firstName}"/>
+<apex:inputField id="contactLastName"  value="{!contact.lastName}"/>
+<apex:inputField id="contactPhone" value="{!contact.phone}"/>
+<apex:inputField id="mailingstreet" value="{!contact.mailingstreet}"/>
+<apex:inputField id="mailingcity" value="{!contact.mailingcity}"/>
+<apex:inputField id="mailingstate" value="{!contact.mailingstate}"/>
+</apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+<table width="100%">
+    <tr>
+        <td  style="padding-left:400px;background-color:#77b900;color:white;" height="30px">
+            <h1>Step 1 of 3</h1>
+        </td>
+    </tr>
+</table>
+</apex:page>

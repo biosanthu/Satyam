@@ -1,0 +1,805 @@
+<apex:page controller="CloudLock_ELF.ELF_Visualizer_ctrlr" sidebar="false">
+    
+    <apex:includeScript value="https://maps.google.com/maps/api/js?sensor=true"/>
+    <apex:includeScript value="{!$Resource.CloudLock_ELF__jqueryMin}"/>
+    <apex:includeScript value="{!$Resource.CloudLock_ELF__throttleDebounce}"/>
+    <apex:includeScript value="{!$Resource.CloudLock_ELF__stickyheader}"/>
+    <apex:includeScript value="{!$Resource.CloudLock_ELF__jqueryMousewheel}"/>
+    <apex:includeScript value="{!$Resource.CloudLock_ELF__jqueryJscrollpane}"/>
+    <apex:includeScript value="{!$Resource.CloudLock_ELF__CountryState}"/>
+    <apex:includeScript value="{!$Resource.CloudLock_ELF__marketoForm}"/>
+        
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'/>
+    <apex:stylesheet value="{!$Resource.CloudLock_ELF__styles}"/>
+    <apex:stylesheet value="{!$Resource.CloudLock_ELF__jqueryJscrollpaneCSS}"/>
+    
+    <script>
+        
+        
+        function openPopup(){
+            jQuery(".popupOverlay").fadeIn();
+            jQuery("body").css({"overflow":"hidden"});
+        }    
+        function attributesPopup(){
+            jQuery("body").css({"overflow":"hidden"});            
+            jQuery(".attributesOverlay").fadeIn();
+            var popupHt = jQuery(".attributesWrap .sticky-component table").height() + 100;
+            var scrollbarHt = jQuery(".attributesWrap .sticky-component table").height() + 20;
+            
+            if(jQuery(".attPanelTbl").height() < 400){
+                jQuery(".attributesWrap").css({"height":popupHt});
+                jQuery(".scrollbar").css({"height":scrollbarHt});
+            }
+            
+        }
+        function closePopupAtt(){
+            jQuery(".attributesOverlay").fadeOut();
+            jQuery("body").css({"overflow":""});
+        } 
+        function closeSignup(){
+            jQuery(".popupOverlay").fadeOut(); 
+            jQuery("body").css({"overflow":""});
+        }    
+        jQuery(document).keyup(function(e) {
+            if (e.keyCode == 27) { jQuery(".popupOverlay").fadeOut(); }
+        });
+    
+        jQuery(document).ready(function() {
+            /*
+            var theControllerValue = '{!isRegistered}';
+            alert(theControllerValue);
+            */
+            
+            
+            
+            //Code For Sign Up Form Validation and Submission
+            jQuery('#submitSignUpForm').click(function(){
+                var hasError = 0;
+                var firstname = jQuery("#cFirstname").val();
+                var lastname = jQuery("#cLastname").val();
+                var company = jQuery("#cCompany").val();
+                var mobile = jQuery("#cMobile").val();
+                var email = jQuery("#cEmail").val();
+                var country = jQuery("#cCountry").val();
+                var state = jQuery("#cState").val();
+                
+                if(jQuery.trim(firstname)=="")
+                {
+                    jQuery("#cFirstname").closest("dd").addClass("error");
+                    hasError = 1;
+                }
+                if(jQuery.trim(lastname)=="")
+                {
+                    jQuery("#cLastname").closest("dd").addClass("error");
+                    hasError = 1;
+                }
+                if(jQuery.trim(company)=="")
+                {
+                    jQuery("#cCompany").closest("dd").addClass("error");
+                    hasError = 1;
+                }   
+                if(jQuery.trim(mobile)=="" || !isPhone(mobile))
+                {
+                    jQuery("#cMobile").closest("dd").addClass("error");
+                    hasError = 1;
+                }
+                if(jQuery.trim(email)=="" || !isValidEmail(email) || !isCompanyEmailValid(email))
+                {
+                    jQuery("#cEmail").closest("dd").addClass("error");
+                    hasError = 1;
+                }   
+                if(jQuery.trim(country)=="")
+                {
+                    jQuery("#cCountry").closest("dd").addClass("error");
+                    hasError = 1;
+                }
+                if(jQuery.trim(state)=="" && (jQuery.trim(country)=="United States" || jQuery.trim(country)=="Canada"))
+                {
+                    jQuery("#cState").closest("dd").addClass("error");
+                    hasError = 1;
+                }   
+                else
+                if(jQuery.trim(country)!="United States" && jQuery.trim(country)!="Canada")
+                {
+                    state="Not In US or Canada";
+                }
+                if(!jQuery('#terms').prop('checked'))
+                {
+                    jQuery(".termsCheckbox").find("dd").addClass("error");
+                    hasError = 1;
+                }
+                
+                if(hasError == 0)
+                {
+                    jQuery(".signupLoader").fadeIn();
+                    
+                    jQuery("form.mktoForm").find("input#FirstName").val(firstname);
+                    jQuery("form.mktoForm").find("input#LastName").val(lastname);
+                    jQuery("form.mktoForm").find("input#Company").val(company);
+                    jQuery("form.mktoForm").find("input#Phone").val(mobile);
+                    jQuery("form.mktoForm").find("input#Email").val(email);
+                    jQuery("form.mktoForm").find("input#Email").val(email);
+                    jQuery("form.mktoForm").find("input#Country__c").val(country);
+                    jQuery("form.mktoForm").find("input#State__c").val(state);
+                    jQuery("form.mktoForm").find("input#Terms_of_service__c").attr('checked', true);
+                   
+                    MktoForms2.getForm(2495).submit();
+
+                    setRegisteredTrue();
+                   
+                }
+                return false;
+            });
+            
+            
+            jQuery(document).on("change", "#terms", function(){
+                if(jQuery(this.checked))
+                {
+                    if(jQuery(".termsCheckbox").find("dd").hasClass("error"))
+                    {
+                        jQuery(".termsCheckbox").find("dd").removeClass("error");
+                    }
+                }   
+            });
+            
+            jQuery(document).on("click", "dd .removeError", function(){
+                if(jQuery(this).closest("dd").hasClass("error"));
+                {
+                   jQuery(this).closest("dd").removeClass("error");
+                   jQuery(this).closest("dd").find("input").trigger("focus");
+                }   
+            });
+            
+            jQuery(document).on("focus", "dd .removeError", function(){
+                if(jQuery(this).closest("dd").hasClass("error"));
+                {
+                   jQuery(this).closest("dd").removeClass("error");
+                   jQuery(this).closest("dd").find("input").trigger("focus");
+                }   
+            });
+            
+            jQuery("#cancelSignUpForm").click(function(){
+                jQuery("#signupForm dd").removeClass("error");
+                jQuery("#signupForm").find("input[type=text]").val("");
+                jQuery("#signupForm").find("select").prop('selectedIndex',0);
+                jQuery('#terms').attr('checked', false);
+                selObj = document.getElementById('cState');
+                parentObj = document.getElementById('cState').parentNode;
+                parentObj.removeChild(selObj);
+                var inputEl = document.createElement("INPUT");
+                inputEl.setAttribute("id", "cState");
+                inputEl.setAttribute("type", "text");
+                inputEl.setAttribute("name", "cState");
+                inputEl.setAttribute("size", 30);
+                inputEl.setAttribute("value", "");
+                inputEl.setAttribute("disabled", "disabled");
+                inputEl.setAttribute("style", "background-color:#63BADB;");
+                parentObj.appendChild(inputEl);
+                jQuery(inputEl).closest("dl").find("dt").css('color','#8DD2EC');
+                jQuery(inputEl).closest("dd").removeClass("selectBox");  
+                return false;
+            });
+              
+            jQuery('.scroll-pane').jScrollPane();
+            
+            var eventType = getUrlParameter('eventType');
+            var eventDate = getUrlParameter('eventDate');
+            if(eventType!=undefined)
+            {
+                jQuery('[name=selectType]').val(eventType);
+            }
+            if(eventDate!=undefined)
+            {
+                var date = eventDate.split('-');
+                var months = {1:'Jan', 2:'Feb', 3:'Mar', 4:'Apr', 5:'May', 6:'Jun', 7:'Jul', 8:'Aug', 9:'Sep', 10:'Oct', 11:'Nov', 12:'Dec'};
+                var newdate = months[date[1]]+" "+date[2]+", "+date[0];
+                jQuery('[name=selectDate] option[value*="'+newdate+'"]').attr("selected","selected");
+            }    
+            MktoForms2.loadForm("https://app-sjh.marketo.com", "339-GXO-600", 2495, function(form){
+                //set hidden field values
+                form.onSuccess(function(values, followUpUrl){
+                    return false;
+                });
+        
+            });
+
+            
+            jQuery(window).scroll(function(){
+                
+                if(jQuery(".CTA").length > 0) {
+                    var eventTopPos = jQuery(".bPageFooter").offset().top - jQuery(window).height();
+;
+                    if(jQuery(window).scrollTop() > eventTopPos)
+                    {
+                        jQuery(".CTA").css({position:"absolute"});
+                    } else {
+                        jQuery(".CTA").css({position:""});
+                    }
+               }
+            });
+            
+            jQuery(window).scroll(function(){
+                
+                if(jQuery(".jspHorizontalBar").length > 0) {
+                    var eventTopPos = jQuery(".handleScroll").offset().top - jQuery(window).height() + 76;
+                    
+                    if(jQuery(window).scrollTop() > eventTopPos)
+                    {
+                        jQuery(".jspHorizontalBar").css({position:"absolute", bottom:"0", margin:"0"});
+                    } else {
+                        jQuery(".jspHorizontalBar").css({position:"fixed", bottom:"76px", margin:"0 1%"});
+                    }
+               }
+            });
+            
+            
+            jQuery(document).on("change",".eventType select",function(){
+                //var thisOption = jQuery("option", this);
+                var optionSelected = jQuery("option:selected", this);
+                var valueSelected = this.value;
+                var selectedEventType = getUrlParameter("eventType");
+
+                jQuery('[name=selectType]').val(valueSelected);
+                
+                if(valueSelected=="Select Event Type" && eventType!=undefined )
+                {
+                   var url = window.location.href; 
+                   url=url.replace(/&?eventType=([^&]$|[^&]*)/i, "");
+                   window.location = url;
+                }
+                else 
+                if(selectedEventType!=undefined && selectedEventType!="")
+                {
+                   var url = window.location.href; 
+                   url=url.replace(/&?eventType=([^&]$|[^&]*)/i, "");
+                   url = url+"&eventType="+valueSelected;
+                   window.location = url;
+                }
+                else
+                {    
+                   var url = window.location.href; 
+                   url = url+"&eventType="+valueSelected;
+                   window.location = url;
+                }
+            });
+            
+            jQuery(document).on("change",".eventDate select",function(){
+                var months = {Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12};
+                var optionSelected = jQuery("option:selected", this);
+                var valueSelected = this.value;
+                var selectedEventDate = getUrlParameter("eventType");
+                
+                jQuery('[name=selectDate]').val(valueSelected);
+                
+                if(valueSelected=="Select Date of Event" && eventDate!=undefined)
+                {
+                   var url = window.location.href; 
+                   url=url.replace(/&?eventDate=([^&]$|[^&]*)/i, "");
+                   window.location = url;
+                }
+                else
+                if(selectedEventDate!=undefined && selectedEventDate!="")
+                {
+                   var url = window.location.href; 
+                   url=url.replace(/&?eventDate=([^&]$|[^&]*)/i, "");
+                   var date = valueSelected.split(',');
+                   var newdate = date[1].split(' ');
+                   var dateP = jQuery.trim(date[2])+"-"+months[newdate[1]]+"-"+newdate[2];
+                   url = url+"&eventDate="+dateP;
+                   window.location = url;
+                }
+                else
+                {   
+                   var date = valueSelected.split(',');
+                   var newdate = date[1].split(' ');
+                   var dateP = jQuery.trim(date[2])+"-"+months[newdate[1]]+"-"+newdate[2];
+                   var url = window.location.href; 
+                   url = url+"&eventDate="+dateP;
+                   window.location = url;
+                }
+                
+            });
+               
+        });
+
+        function refreshForm()
+        {
+            setTimeout(function(){
+                jQuery(".signupLoader, #signupForm, #contHide").fadeOut(function(){
+                    jQuery("#thankYouMsg").fadeIn();
+                    window.location.reload();
+                });
+            }, 5000);
+            return false;
+        }
+        function isValidEmail(value)
+        {
+            var filter=/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            if(filter.test(trim(value)))
+            return true;
+            else
+            return false;
+        } 
+        
+        function isPhone(value)
+        {
+            var iChars = "0123456789+-#/() ";
+            for (var i = 0; i < value.length; i++) 
+            {
+                if(iChars.indexOf(value.charAt(i)) == -1) 
+                {
+                    return false;
+                }
+            } 
+            return true;
+        }
+
+        function getUrlParameter(sParam)
+        {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) 
+            {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) 
+                {
+                    return sParameterName[1];
+                }
+            }
+        }          
+    
+             
+        
+    </script>
+    
+    <apex:form id="all">
+        <apex:actionFunction name="setRegisteredTrue" action="{!completeRegistration}" oncomplete="refreshForm()"/>
+
+        <div class="mainSection">
+            <div class="logViewerCtnr" style="{!IF((isRegistered && isElfEnabled),'','display:none')}">            
+                <div class="viewer_head">
+                    <div class="headingTxt flt">
+                        <h1>
+                            <apex:image value="{!$Resource.CloudLock_ELF__fileViewer}" alt="Event Monitoring Viewer" title="Event Monitoring Viewer, Click here for release notes." onclick="window.open('https://docs.google.com/document/d/1CrnhlrrfS5YHycoXG4s_WOy6nB9Svtlm_4D_BgExoNs/pub');"/>
+                            Event Monitoring Viewer
+                            
+                        </h1>
+                    </div><!--headingTxt-->
+                    <div class="poweredBy frt">Powered by <apex:image value="{!$Resource.CloudLock_ELF__cloudlockLogo}" alt="CloudLock" title="CloudLock"/></div><!--poweredBy-->
+                </div>    
+                
+                <div class="sticky-component">                    
+                    <apex:outputpanel id="recordsPanel" layout="block">
+                        
+                    <table border="0" cellspacing="0" cellpadding="0">
+                        <thead>
+                            <tr>
+                                <th colspan="4" bgcolor="#e6f1f8">
+                                    <div class="logCount flt">Total Logs Returned: <span>{!logReq.totalSize}</span></div>
+                                    
+                                    <div class="selectBox frt date eventDate">
+                                        <select name="selectDate">
+                                            <option value="Select Date of Event">Select Date of Event</option>
+                                            
+                                            <apex:repeat value="{!logEventDates}" var="eDate">
+                                            <option value="{!eDate}">{!eDate}</option>
+                                            </apex:repeat>
+                                            
+                                        </select>
+                                    </div> 
+                                    
+                                    <div class="selectBox frt eventType">
+                                        <select name="selectType">
+                                            <option value="Select Event Type">Select Event Type</option>
+                                            
+                                            <apex:repeat value="{!logEventNames}" var="eName">
+                                                <option value="{!eName}">{!eName}</option>
+                                            </apex:repeat>
+                                        </select>
+                                    </div>
+                                </th>                   
+                            </tr>
+                            <tr class="tblHead">
+                                <th width="40%">Event Type</th>
+                                <th width="20%">Event Date</th>
+                                <th width="40%">Actions</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            <apex:repeat value="{!logReq.records}" var="logRec">
+                            <tr>    
+                                <td>
+                                    <b>
+                                    <apex:commandLink value="{!logRec.eventType}" oncomplete="stickyHead()" action="{!logSelected}" status="logParseStatus" rerender="all" target="_blank" rendered="{!logRec.LogFileLength <= 5500000}" title="Display Log">
+                                        <apex:param assignTo="{!selectedLogId}" name="selLog" value="{!logRec.Id}"/>
+                                    </apex:commandLink>
+                                    <apex:outputText value="{!logRec.eventType}" rendered="{!logRec.LogFileLength > 5500000}"  title="File too large.  Use the CloudLock Security Fabric platform for complete log data, policies and analytics."></apex:outputText>
+                                    </b>
+                                </td>
+                                <td>                        
+                                    {!logRec.dispLogDate}
+                                </td>
+                                <td>
+                                    <div class="actionCount flt">
+                                        <apex:image value="{!$Resource.CloudLock_ELF__docImg}" alt="Document" title="Document"/>
+                                        <span>({!ROUND(logRec.LogFileLength/1000,0)} kb)</span>
+                                    </div>
+                                    
+                                    <div class="actionBtn flt">                            
+                                        <apex:actionStatus id="logFileStatus">
+                                            <apex:facet name="start">
+                                                ....Loading Log File, Please wait
+                                            </apex:facet>
+                                            <apex:facet name="stop">  
+
+                                                <apex:commandButton value="Export" oncomplete="stickyHeadComp()" onclick="var wnd=window.open('/apex/ELF_LogFile?id={!logRec.Id}&event={!logRec.EventType}&date={!URLENCODE(logRec.dispLogDate)}','Downloading_File'); setTimeout('wnd.close()',5000); alert('Download completed!')" status="logFileStatus" rerender="all" disabled="{!logRec.LogFileLength > 5500000}" title="{!IF(logRec.LogFileLength > 5500000, 'File too large.  Use the CloudLock Security Fabric platform for complete log data, policies and analytics.', 'Export CSV')}" >
+                                                    <apex:param assignTo="{!selectedLogId}" name="selLog" value="{!logRec.Id}"/>
+                                                </apex:commandButton>
+
+                                            </apex:facet>
+                                        </apex:actionStatus>
+                                   </div>
+                                </td>
+                            </tr>
+                            
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                    </apex:outputpanel>                
+                </div><!--sticky-component-->
+            </div><!--logViewerCtnr-->  
+           
+                
+            <div class="loadingOverlay">       
+                <!-- *********************************************************** -->
+                <!-- ****** Loading Status Wheel For Fetching Log Details ****** -->
+                <apex:actionStatus id="logParseStatus">
+                    <apex:facet name="start">
+                        <apex:image value="{!$Resource.CloudLock_ELF__loading}"/>
+                    </apex:facet>
+                    <apex:facet name="stop"></apex:facet>
+                </apex:actionStatus>
+                <!-- *********************************************************** -->  
+            </div><!--loadingOverlay-->
+            
+            <div class="loadingOverlay">
+                <apex:actionStatus id="attributesStatus">
+                    <apex:facet name="start">
+                        <apex:image value="{!$Resource.CloudLock_ELF__loading}"/>
+                    </apex:facet>
+                    <apex:facet name="stop"></apex:facet>
+                </apex:actionStatus>
+            </div><!--loadingOverlay-->            
+                    
+            <div class="logDetailsCtnr">
+                
+                <div class="viewer_head">
+                    <div class="headingTxt flt">
+                        <a href="#" class="backToEvent">Back to event log</a>
+                        <h1>
+                            Log Detail
+                        </h1>
+                    </div><!--headingTxt-->
+                    <div class="poweredBy frt">Powered by <apex:image value="{!$Resource.CloudLock_ELF__cloudlockLogo}" alt="CloudLock" title="CloudLock"/></div><!--poweredBy-->
+                </div><!--viewer_head--> 
+                
+                <div class="sticky-component">
+                    <div class="scroll-pane">
+                        <apex:outputPanel id="logFilePanel" layout="block" styleClass="logFilePanel">
+                          <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th colspan="100%" bgcolor="#E6F1F8">
+                                        <div class="logCount flt">Event Type:  <span>{!selectedLogRec.EventType}</span></div>
+                                        <div class="logCount flt">Date:  <span>{!selectedLogRec.dispLogDate}</span></div>                                                           
+                            
+                                        <!-- ================================================================================================ -->
+                                        <!-- ======================= MAP LOAD BUTTON (w/ loading wheel action status) ====================== -->
+                                        <div class="loadingOverlay whiteBtn2 flt">
+                                            <apex:actionRegion renderRegionOnly="false">
+                                                <apex:actionStatus id="mapStatus">
+                                                    <apex:facet name="start">
+                                                        <apex:image value="{!$Resource.CloudLock_ELF__loading}"/>
+                                                    </apex:facet>     
+                                                    <apex:facet name="stop">
+                                                        <apex:commandButton id="mapViewBtn" value="View Map" action="{!logMapSelected}" oncomplete="mapPopup()" status="mapStatus" rerender="mapViewBtn,mapPanel" rendered="{!NOT(ISNULL(selectedLogRec))}"/>
+                                                    </apex:facet>                
+                                                </apex:actionStatus>
+                                            </apex:actionRegion>
+                                        </div><!--loadingOverlay--> 
+                                        <!-- ================================================================================================ -->
+                                        
+                                         <apex:commandButton styleClass="whiteBtn2 flt" id="theButton1" value="Export" oncomplete="stickyHeadComp()" onclick="var wnd=window.open('/apex/ELF_LogFile?id={!selectedLogRec.Id}&event={!selectedLogRec.EventType}&date={!URLENCODE(selectedLogRec.dispLogDate)}','Downloading_File'); setTimeout('wnd.close()',5000); alert('Download completed!'); return false;" status="logFileStatus" rerender="all">
+                                                  <apex:param assignTo="{!selectedLogId}" name="selLog" value="{!selectedLogRec.Id}"/>
+                                         </apex:commandButton>
+                                        
+                                    </th>
+                                </tr>
+                                <!-- ------------ LOG DETAIL COLUMN HEADERS FROM SELECTED LOG FILE  ------------ -->
+                                <tr class="tblHead">
+                                    <th/>                        
+                                    <apex:variable value="{!0}" var="colNum"/>
+                                    <apex:repeat value="{!activeTable.ColumnMap}" var="col">
+                                     <apex:variable value="{!colNum+1}" var="colNum"/>
+                                     <th>
+                                         {!SUBSTITUTE(activeTable.ColumnMap[colNum].name,"_"," ")}
+                                     </th>
+                                    </apex:repeat>
+                                </tr>
+                            </thead>                
+                            <!-- --------------------------------------------------------------------------- -->
+                            
+                            <tbody>
+                            <!-- ------------ LOG DETAIL ROWS FROM SELECTED LOG FILE  ------------ -->
+                            <apex:variable value="{!0}" var="rowNum"/>
+                            <apex:repeat value="{!activeTable.rowMap}" var="row">
+                                <apex:variable value="{!rowNum+1}" var="rowNum"/>
+                                <tr>
+                                    <td>{!rowNum}</td>
+                                    <!-- ----- LOG DETAIL COLUMN DATA FROM SELECTED LOG FILE  ----- -->
+                                    <apex:variable value="{!0}" var="colNum"/>
+                                    <apex:repeat value="{!activeTable.rowMap[rowNum].columnData}" var="fld">
+                                        <apex:variable value="{!colNum+1}" var="colNum"/>
+                                        <td style="color: #{!activeTable.rowMap[rowNum].columnData[colNum].dispColor};">
+                                        
+                                            <apex:commandButton styleClass="attrBtn" image="{!$Resource.CloudLock_ELF__attrBtn}" title="Parse/Drill-Down" 
+                                                                action="{!buildLogFileRowAtts}" oncomplete="attributesPopup()" status="attributesStatus" 
+                                                                reRender="attPanel" rendered="{!activeTable.rowMap[rowNum].columnData[colNum].hasAtts}" style="padding: 0px;">
+                                                <apex:param assignTo="{!selectedLogFileRow}" name="selRow" value="{!rowNum}"/>
+                                                <apex:param assignTo="{!selectedLogFileCol}" name="selCol" value="{!colNum}"/>
+                                            </apex:commandButton>
+                                        
+                                            <apex:commandButton id="singleMapBtn" title="View Map" styleClass="gMapBtn" value="View Map" 
+                                                                action="{!singleIpSelected}" oncomplete="mapPopup()" 
+                                                                status="mapStatus" reRender="singleMapBtn,mapPanel" 
+                                                                rendered="{!AND(activeTable.columnMap[colNum].dataType='IP',TRIM(activeTable.rowMap[rowNum].columnData[colNum].dispValue)!='')}" 
+                                                                style="padding: 0px;">
+                                                <apex:param assignTo="{!selectedLogFileRow}" name="selRow" value="{!rowNum}"/>
+                                                <apex:param assignTo="{!selectedLogFileCol}" name="selCol" value="{!colNum}"/>
+                                            </apex:commandButton>
+                                            
+                                            {!activeTable.rowMap[rowNum].columnData[colNum].dispValue}
+                                            
+                                        </td>
+                                    </apex:repeat>
+                                    <!-- ---------------------------------------------------------- -->
+                                </tr>
+                                
+                            </apex:repeat>
+                            </tbody>
+                            <!-- ----------------------------------------------------------------- -->
+                        </table>
+                        </apex:outputPanel>
+                    <div class="handleScroll"></div>
+                    </div><!--scroll-pane-->
+                </div><!--sticky-component-->
+                
+                <!-- ===================================================================================== -->
+                <!-- =================== ATTRIBUTE PARSING (WHERE APPLICABLE) ============================ -->
+                <div class="attributesOverlay">                  
+                    <div class="attributesWrap">
+                        <div class="sticky-component">
+                            
+                            <apex:outputPanel id="attPanel" layout="block">
+                                <div class="attrHead">
+                                    <h2>Attributes</h2>
+                                    <span class="closeBtn" onclick="closePopupAtt();"></span>
+                                    
+                                    <div class="logCount flt">Event Date: <span>{!selectedLogRec.dispLogDate}</span></div>
+                                    <div class="logCount flt">Event Type: <span>{!selectedLogRec.EventType}</span></div>
+                                </div>
+                               
+                                <div class="scrollbar">                               
+                                <table border="0" cellspacing="0" cellpadding="0" class="attPanelTbl" width="100%" style="width:100% !important;">
+                                    <thead>
+                                        <tr class="tblHead">
+                                            <th width="40%">
+                                                Attribute
+                                            </th>
+                                            <th width="60%">
+                                                Value
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!selDataAttMap}" var="attName">
+                                        <tr>
+                                            <td>
+                                               {!attName}
+                                            </td>
+                                            <td>
+                                                <apex:outputLabel escape="true" value="{!selDataAttMap[attName]}"></apex:outputLabel>
+                                            </td>
+                                        </tr>                                            
+                                        </apex:repeat>
+                                   </tbody>
+                                </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div><!--attributesWrap-->
+                </div><!--attributesOverlay-->
+                <!-- ===================================================================================== -->
+            
+                
+                    
+            </div><!--logDetailsCtnr-->
+            
+            <!--
+            <div style="background-color:beige; border: 1px solid gray; text-align: center;">
+                  {!requestStatus}
+            </div>
+            -->
+            
+            <!-- =================================================== -->
+            <!-- ============= MAPS MAPS MAPS ====================== -->
+         
+                <apex:outputPanel id="mapPanel" layout="block" rendered="true">
+        
+                    <div class="mapOverlay">
+                       <c:GeoIPMapper id="geoMap" eventType="{!selectedLogRec.EventType}" locatorList="{!LogLocators}" userId="{!selectedRowUser}" timeStamp="{!selectedRowTime}"  rendered="{!showMap}" />
+                    </div>
+                        
+                </apex:outputPanel>
+        
+            <!-- =================================================== -->
+            
+                
+            <div class="CTA">
+                <h2>Worried about user behavior? Detect and visualize anomalies with CloudLock</h2>
+                <a href="http://www.cloudlock.com/products/salesforce/" target="_blank" class="whiteBtn">Learn more</a>
+            </div><!--CTA-->
+            
+           <div class="splashScreen" style="{!IF((isRegistered && isElfEnabled),'display:none','')}">
+               <div class="splashScreenBor">                   
+                   <div class="splashContent">                   
+                                       
+                       <div class="textBlock">
+                           <div class="splashHead">
+                               <h1><apex:image value="{!$Resource.CloudLock_ELF__whiteFileViewer}" alt="Event Monitoring Viewer" title="Event Monitoring Viewer"/>Event Monitoring Viewer</h1>
+                               <div class="poweredby frt">Powered by <apex:image value="{!$Resource.CloudLock_ELF__clLogoWhite}" alt="CloudLock" title="CloudLock"/></div>
+                           </div>
+                           <p style="{!IF((isElfEnabled),'display:none','')}">
+                                It looks like your organization
+                               does not have the<br/>
+                                “Event Monitoring” API enabled.
+                           </p>
+                           <p style="{!IF((isElfEnabled),'display:block','display:none')}" class="marB20">
+                               Looks like your organization 
+                               is not registered <br/>for the 
+                               CloudLock Event Monitoring Viewer. <br/>Follow these steps:
+                           </p>
+                           <span style="{!IF((isElfEnabled),'display:none','')}">This application is designed to work with Salesforce.com’s Event Log Files API</span>
+                           
+                           <ul class="steps">
+                               <apex:variable value="{!1}" var="stepNum"/>
+                               
+                               <li style="{!IF((isElfEnabled),'display:none','')}">
+                                   <span>{!stepNum}</span>
+                                   Activate the service with Salesforce
+                               </li>
+                               <apex:variable value="{!IF(isElfEnabled, stepNum, stepNum +1)}" var="stepNum"/>
+                               
+                               
+                               <li style="{!IF((isCalloutEnabled),'display:none','')}">
+                                   <span>{!stepNum}</span>
+                                   <a href="/0rp/e?SiteName=EventLogFiles&EndpointUrl={!remoteSiteUrl}&DescriptionField=Access to Event Log Files API&IsActive=1&saveURL={!$CurrentPage.URL}">
+                                       Enable API access with "Remote Site Settings"
+                                   </a> 
+                               </li> 
+                               <apex:variable value="{!IF(AND(isCalloutEnabled,isElfEnabled), stepNum, stepNum +1)}" var="stepNum"/>
+                               
+                               <li style="{!IF((isRegistered),'display:none','')}">
+                                   <span>{!stepNum}</span>
+                                   <strong style="{!IF(!(isElfEnabled),'','display:none')}">Sign up</strong>
+                                   <a style="{!IF((isElfEnabled),'','display:none')}" href="javascript:void(0)" class="signupBtn" onclick="openPopup()" title="Sign up">Sign up</a> with CloudLock
+                               </li>
+                               
+                               <li>
+                                   <span>{!stepNum +1}</span>
+                                   Get started with the <strong>free Event Monitoring Viewer</strong>
+                               </li>
+                           </ul>
+                       </div><!--textBlock--> 
+                       
+                       <div class="imgBlock">                          
+                           <apex:image value="{!$Resource.CloudLock_ELF__eventLogFile}" alt="Event Log File API" title="Event Log File API"/>
+                       </div><!--imgBlock-->    
+                       
+                   </div><!--splashContent-->
+               </div><!--splashScreenBor-->
+           </div><!--splashScreen--> 
+         </div><!--mainSection--> 
+      </apex:form>
+        
+      <div class="popupOverlay">
+          <div class="popupWrap">
+            <span class="closeBtn" onclick="closeSignup();"></span>
+            <div id="contHide">
+                <h2>Sign up with CloudLock</h2>
+                <div class="fieldsMdtry">All fields Mandatory</div>
+            </div>
+            <form id="mktoForm_2495" style="display:none"></form>
+              
+              <div class="signupForm" id="signupForm">
+                <div class="signupLoader"><apex:image value="{!$Resource.CloudLock_ELF__loading}"/></div>
+                  
+                <dl>
+                    <dt>First Name</dt>
+                    <dd class="">
+                        <input class="removeError" type="text" name="firstname" id="cFirstname" />
+                        <span class="removeError">Please enter first name</span>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>Last Name</dt>
+                    <dd class="">
+                        <input class="removeError" type="text" name="fullname" id="cLastname" />
+                        <span class="removeError">Please enter last name</span>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>Company</dt>
+                    <dd class="">
+                        <input class="removeError" type="text" name="company" id="cCompany" />
+                        <span class="removeError">Please enter company name</span>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>Mobile</dt>
+                    <dd class="">
+                        <input class="removeError" type="text" name="mobile" id="cMobile" />
+                        <span class="removeError">Please enter valid mobile number</span>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>Email</dt>
+                    <dd class="">
+                        <input class="removeError" type="text" name="email" id="cEmail" />
+                        <span class="removeError">Please enter valid business email id</span>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>Country</dt>
+                    <dd class="selectBox">
+                        <select class="removeError" name="cCountry" id="cCountry" onchange='populateState()'>
+                        </select>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>State/ Region</dt>
+                    <dd class="selectBox">
+                        <select class="removeError" name="cState"  id="cState">
+                        </select>
+                    </dd>
+                </dl>
+                <dl class="termsCheckbox">
+                    <dt>&nbsp;</dt>
+                    <dd> 
+                        <input type="checkbox" name="checkbox" id="terms" value="" />
+                        <label for="terms">Agree with CloudLock <a href="http://www.cloudlock.com/tos/" target="_blank">Terms of Service</a></label>                        
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="button" value="Submit" class="submitBtn" id="submitSignUpForm" />
+                        <input type="button" value="Cancel" class="cancelBtn" id="cancelSignUpForm"/>
+                    </dd>
+                </dl>                  
+            </div>
+              
+              <div id="thankYouMsg" class="getStarted" style="display:none">
+                  <span></span>
+                  <h2>Lets get started!</h2>
+                  <p>You can now start using the free Event Monitoring Viewer tool powered by CloudLock</p>
+              </div>
+                
+          </div>    
+          <script type="text/javascript">initCountry('');</script>
+      </div><!--popupOverlay-->
+    
+    
+    
+</apex:page>

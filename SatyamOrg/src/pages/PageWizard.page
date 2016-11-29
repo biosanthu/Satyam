@@ -1,0 +1,41 @@
+<apex:page sidebar="false" controller="CustomEvent">
+
+<script>
+function confirmCancel() {
+var isCancel = confirm("Are you sure you wish to cancel?");
+if (isCancel) return true;
+return false;
+}
+
+function clk()
+{
+var clockTime = getClockTime();
+document.write('Time is ' + clockTime);
+}
+
+
+
+</script>
+<apex:sectionHeader title="Add Event" subtitle="Step 1 of 3"/>
+<apex:form >
+<apex:pageBlock title="Add Event" mode="edit">
+<apex:pageBlockButtons >
+<apex:commandButton action="{!step2}" value="Next"/>
+<apex:commandButton action="{!cancel}" value="Cancel" onclick="return confirmCancel()" immediate="true"/>
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="Calendar Details">
+<apex:inputField id="AssignedTo"  value="{!event.OwnerId}"/><br/><br/>
+<apex:inputField id="Subject" required="true" value="{!event.Subject}"/><br/><br/>
+<apex:inputField id="StartTime" value="{!event.ActivityDateTime}" /> 
+<apex:inputField id="Duration" required="true"  value="{!event.durationinminutes}"/><br/><br/>
+<apex:inputField id="IsAllDayEvent" value="{!event.IsAllDayEvent}" /><br/><br/>
+<apex:inputField id="Location" value="{!event.Location}"/> <br/><br/>
+<!-- <apex:inputField id="activitydate"  value="{!event.activitydate}"/> <br/><br/> 
+<apex:inputField id="startdate"   value="{!event.recurrencestartdatetime}"/><br/><br/>-->
+
+<!--<apex:inputField id="recurrenceenddateonly"  value="{!event.recurrenceenddateonly}"/> <br/><br/>
+<apex:inputField id="recurrenceinstance"  value="{!event.activitydatetime}"/> <br/><br/>-->
+</apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

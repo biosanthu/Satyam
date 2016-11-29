@@ -1,0 +1,18 @@
+<apex:page Controller="CustomerWizard" sidebar="false" tabStyle="account">
+<apex:form >
+<apex:pageBlock title="Customer Service"  mode="edit" >
+<apex:pageBlockButtons >
+<apex:commandButton action="{!step1}" value="Step2" />
+<apex:commandButton action="{!cancel}" value="Cancel" />
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="Complaint Information">
+<apex:inputField id="agentname" value="{!Customer.Agent__c}"/>
+<apex:inputField id="billId" value="{!Customer.Bill_ID__c}"/>
+<apex:inputField id="city" value="{!Customer.City__c}"/>
+<apex:inputField id="location" value="{!Customer.Location__c}"/>
+<apex:inputField id="test" value="{!Customer.Notes__c}"/>
+<apex:inputTextarea title="case comments" rows="5"  richText="true" value="{!comment}" />
+  </apex:pageBlockSection>
+  </apex:pageBlock>
+  </Apex:form> 
+</apex:page>
